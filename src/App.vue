@@ -4,15 +4,6 @@
       <template v-for="(element, i) in elements">
         <component :is="element.name" v-model="elements[i]"></component>
       </template>
-
-
-      <!-- <rect x="10" y="10" width="50" height="50" fill="gray" />-->
-      <!-- <rect x="100" y="200" width="50" height="50" fill="green" />-->
-
-      <template slot="footer">
-        <rect x="100" y="10" width="50" height="50" fill="gray" />
-
-      </template>
     </vsvg>
     
   </div>

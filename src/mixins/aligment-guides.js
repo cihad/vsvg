@@ -3,7 +3,7 @@ import Vrect from "../components/Vrect"
 export default {
   data() {
     return {
-      edges: null
+      edges: this.getSvgEdges()
     }
   },
 
@@ -15,7 +15,7 @@ export default {
       ]
     },
     getSvgEdges() {
-      [
+      return [
         [0, this.width/2, this.width],
         [0, this.height/2, this.height],
       ]
@@ -23,11 +23,12 @@ export default {
   },
   computed: {
     updateEdges() {
-      var svgEdges = this.getSvgEdges()
+      var svgEdges = this.getSvgEdges(),
+          _this = this
 
-      this.elements.forEach(function(rect) {
-        this.edges[0].push(...this.getEdgesOfRect(rect)[0])
-        this.edges[1].push(...this.getEdgesOfRect(rect)[1])
+      this.value.forEach(function(rect) {
+        _this.edges[0].push(..._this.getEdgesOfRect(rect)[0])
+        _this.edges[1].push(..._this.getEdgesOfRect(rect)[1])
       })
     }
   },
@@ -35,10 +36,9 @@ export default {
     elements: {
       handler: this.updateEdges,
       deep: true
-    }  
+    }
   },
   mounted() {
-    debugger
-    console.log(this.$slots.default)
+    this.updateEdges
   }
 }
