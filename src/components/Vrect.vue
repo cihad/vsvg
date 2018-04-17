@@ -3,34 +3,22 @@
         :y="value.y"
         :width="value.width"
         :height="value.height"
-        v-on:mousedown="startDragging"
-        v-on:mouseup="stopDragging"
-        v-on:mousemove="move" />
+        v-on:mousedown="startDragging" />
 </template>
 
 <script>
+import { EventBus } from '../mixins/event-bus'
+
 export default {
   name: 'vrect',
   props: ['value'],
-  data () {
-    return {
-      dragging: false
-    }
-  },
   methods: {
     startDragging(event) {
-      this.dragging = true
-    },
-    move(event) {
-      if (this.dragging) {
-        
-      }
-    },
-    stopDragging(event) {
-      this.dragging = false
+      console.log('dragging START', this)
+      EventBus.dragging = this
+      EventBus.startX = event.pageX
+      EventBus.startY = event.pageY
     }
-  },
-  mounted() {
   }
 }
 </script>

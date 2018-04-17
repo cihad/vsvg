@@ -1,44 +1,46 @@
 import Vrect from "../components/Vrect"
+import { EventBus } from '../mixins/event-bus'
 
 export default {
   data() {
     return {
-      edges: this.getSvgEdges()
     }
   },
-
   methods: {
     getEdgesOfRect(rectObj) {
-      return [
-        [rectObj.x, rectObj.x+rectObj.width/2, rectObj.x+rectObj.width],
-        [rectObj.y, rectObj.y+rectObj.height/2, rectObj.y+rectObj.height]
-      ]
+      return {
+        x: [rectObj.x, rectObj.x+rectObj.width/2, rectObj.x+rectObj.width],
+        y: [rectObj.y, rectObj.y+rectObj.height/2, rectObj.y+rectObj.height]
+      }
     },
     getSvgEdges() {
-      return [
-        [0, this.width/2, this.width],
-        [0, this.height/2, this.height],
-      ]
-    },
+      return {
+        x: [0, this.width/2, parseInt(this.width)],
+        y: [0, this.height/2, parseInt(this.height)]
+      }
+    }
   },
   computed: {
-    updateEdges() {
+    edges: function() {
       var svgEdges = this.getSvgEdges(),
-          _this = this
+          _this = this,
+          elements = null
 
-      this.value.forEach(function(rect) {
-        _this.edges[0].push(..._this.getEdgesOfRect(rect)[0])
-        _this.edges[1].push(..._this.getEdgesOfRect(rect)[1])
+      if (EventBus.dragging) {
+        elements = this.value.filter(function(rect) {
+          return EventBus.dragging.value !== rect
+        })
+      } else {
+        elements = this.value
+      }
+
+      elements.forEach(function(rect) {
+        svgEdges['x'].push(..._this.getEdgesOfRect(rect)['x'])
+        svgEdges['y'].push(..._this.getEdgesOfRect(rect)['y'])
+        console.log(svgEdges)
       })
+
+      return svgEdges
     }
-  },
-  watch: {
-    elements: {
-      handler: this.updateEdges,
-      deep: true
-    }
-  },
-  mounted() {
-    this.updateEdges
   }
 }
