@@ -4,9 +4,9 @@
         :width="value.width"
         :height="value.height"
         v-on:mousedown="startDragging"
-        :fill="value.fill || 'hsl(205,100%,90%)'"
+        :fill="fill"
         stroke-width="1"
-        :stroke="value.stroke || 'hsl(205,100%,80%)'" />
+        :stroke="stroke" />
 </template>
 
 <script>
@@ -23,7 +23,18 @@ export default {
       this.value.stroke = "hsl(205,100%,70%)"
       EventBus.startX = event.pageX
       EventBus.startY = event.pageY
+      this.$emit('input', this.value)
     }
+  },
+  computed: {
+    fill: function(argument) {
+      console.log('fill UPDATED .............')
+      return this.value.fill || 'hsl(205,100%,90%)'
+    },
+    stroke: function() {
+      console.log('fill UPDATED .............')
+      return this.value.stroke || 'hsl(205,100%,80%)'
+    },
   }
 }
 </script>
