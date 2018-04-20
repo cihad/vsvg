@@ -15,6 +15,8 @@ export default {
     return {
       bus: EventBus,
       snapTreshhold: 5,
+      x: null,
+      y: null
     }
   },
   mounted: function() {
@@ -41,40 +43,42 @@ export default {
     },
     dragElement(event) {
       if (this.bus.dragging) {
+        this.x = event.offsetX - this.bus.mouseOffsetX
+        this.bus.startX = event.offsetX
+        this.y = event.offsetY - this.bus.mouseOffsetY
+        this.bus.startY = event.offsetY
 
-        this.bus.dragging.value.x += event.pageX - this.bus.startX
-        this.bus.startX = event.pageX
-        this.bus.dragging.value.y += event.pageY - this.bus.startY
-        this.bus.startY = event.pageY
+        this.snap('x');
+        this.snap('y');
 
-        this.snap({ axis: 'x'});
-        this.snap({ axis: 'y'});
+        this.redraw()
       }
     },
-    snap(options) {
+    snap(axis) {
       var _this = this
-      var rect = _this.bus.dragging.value
-      var axis = options.axis
+      var rect = this.bus.dragging.value
       var side = axis === 'x' ? 'width' : 'height';
+      var distance = this[axis];
+      var halfSideLength = Math.abs(rect[side]/2);
+      var center = distance + halfSideLength;
+      var endDistance = distance + rect[side];
       
       this.edges[axis].forEach(function(position) {
-        var distance = rect[axis];
-        var halfSideLength = Math.abs(rect[side]/2);
-        var center = distance + halfSideLength;
-        var endDistance = distance + rect[side];
-        var setGuide = false;
-        
         if(Math.abs(distance - position) <= _this.snapTreshhold){
-          rect[axis] = position;
-          setGuide = true;
+          _this[axis] = position;
         }
         else if(Math.abs(center - position) <= _this.snapTreshhold){
-          rect[axis] = position - halfSideLength; // move snap behavior 
+          _this[axis] = position - halfSideLength;
         }
         else if(Math.abs(endDistance - position) <= _this.snapTreshhold){
-          rect[axis] = position - rect[side]; // move snap behavior 
+          _this[axis] = position - rect[side];
         }
       })
+    },
+    redraw() {
+      var rect = this.bus.dragging.value
+      rect.x = this.x
+      rect.y = this.y
     }
   },
   computed: {

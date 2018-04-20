@@ -17,13 +17,14 @@ export default {
   props: ['value'],
   methods: {
     startDragging(event) {
-      console.log('dragging START', this)
+      console.log("OFFSETX: ", event)
       EventBus.dragging = this
-      this.value.fill = "hsl(205,100%,80%)"
+      this.value.fill = "hsl(205,100%,80%)  "
       this.value.stroke = "hsl(205,100%,70%)"
-      EventBus.startX = event.pageX
-      EventBus.startY = event.pageY
-      this.$emit('input', this.value)
+      EventBus.startX = event.offsetX
+      EventBus.startY = event.offsetY
+      EventBus.mouseOffsetX = event.offsetX - this.value.x
+      EventBus.mouseOffsetY = event.offsetY - this.value.y
     }
   },
   computed: {
