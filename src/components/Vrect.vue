@@ -4,9 +4,9 @@
         :width="value.width"
         :height="value.height"
         v-on:mousedown="startDragging"
-        :fill="fill"
+        :fill="value.fill"
         stroke-width="1"
-        :stroke="stroke" />
+        :stroke="value.stroke" />
 </template>
 
 <script>
@@ -17,25 +17,16 @@ export default {
   props: ['value'],
   methods: {
     startDragging(event) {
-      console.log("OFFSETX: ", event)
       EventBus.dragging = this
-      this.value.fill = "hsl(205,100%,80%)  "
+      this.value.fill = "hsl(205,100%,80%)"
       this.value.stroke = "hsl(205,100%,70%)"
       EventBus.startX = event.offsetX
       EventBus.startY = event.offsetY
       EventBus.mouseOffsetX = event.offsetX - this.value.x
       EventBus.mouseOffsetY = event.offsetY - this.value.y
+      // console.log(this.$parent.$children[2])
+      // console.log(this.$parent.$children[2].$forceUpdate())
     }
-  },
-  computed: {
-    fill: function(argument) {
-      console.log('fill UPDATED .............')
-      return this.value.fill || 'hsl(205,100%,90%)'
-    },
-    stroke: function() {
-      console.log('fill UPDATED .............')
-      return this.value.stroke || 'hsl(205,100%,80%)'
-    },
   }
 }
 </script>
