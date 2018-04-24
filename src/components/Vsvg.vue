@@ -1,5 +1,4 @@
 <template>
-  <!-- <svg :width="width" :height="height" @mouseup="stopDragging" @mousemove="dragElement"> -->
   <svg :width="width" :height="height">
     <slot></slot>
     

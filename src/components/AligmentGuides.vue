@@ -56,6 +56,12 @@ export default {
         y: [ rectObj.y, rectObj.y+rectObj.height/2, rectObj.y+rectObj.height ]
       }
     },
+    // getEdgesOfText(textComp) {
+    //   return {
+    //     x: [ textComp.value.x, textComp.value.x+Math.round(textComp.width/2), textComp.value.x+Math.round(textComp.width) ],
+    //     y: [ textComp.value.y, textComp.value.y+Math.round(textComp.height/2), textComp.value.y+Math.round(textComp.height) ]
+    //   }
+    // },
     getSvgEdges() {
       return {
         x: [ 0, this.$parent.width/2, parseInt(this.$parent.width) ],
@@ -65,7 +71,6 @@ export default {
     stopDragging(event) {
       this.bus.stopDragging()
       this.removeGuides()
-      this.$forceUpdate()
     },
     dragElement(event) {
       if (this.bus.dragging) {
@@ -87,7 +92,6 @@ export default {
       var center = distance + halfSideLength
       var endDistance = distance + rect[side]
 
-      
       this.edges[axis].forEach(function(position) {
         var setGuide = false
 
@@ -129,16 +133,24 @@ export default {
           elements = null
 
       if (EventBus.dragging) {
-        elements = this.value.filter(function(rect) {
-          return EventBus.dragging.value !== rect
+        elements = this.value.filter(function(obj) {
+          return EventBus.dragging.value !== obj
         })
       } else {
         elements = this.value
       }
 
-      elements.forEach(function(rect) {
-        svgEdges['x'].push(..._this.getEdgesOfRect(rect)['x'])
-        svgEdges['y'].push(..._this.getEdgesOfRect(rect)['y'])
+      elements.forEach(function(obj) {
+        // if (obj.name == 'vtext') {
+        //   var textComp = _this.$parent.$children.find((vueComp) => {
+        //     return vueComp.value == obj
+        //   })
+        //   svgEdges['x'].push(..._this.getEdgesOfText(textComp)['x'])
+        //   svgEdges['y'].push(..._this.getEdgesOfText(textComp)['y'])
+        // } else {
+        svgEdges['x'].push(..._this.getEdgesOfRect(obj)['x'])
+        svgEdges['y'].push(..._this.getEdgesOfRect(obj)['y'])
+        // }
       })
 
       return svgEdges

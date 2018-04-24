@@ -3,31 +3,18 @@
         :y="value.y"
         :width="value.width"
         :height="value.height"
-        v-on:mousedown="startDragging"
-        :fill="value.fill"
+        fill="hsl(205,100%,90%)"
         stroke-width="1"
-        :stroke="value.stroke" />
+        stroke="hsl(205,100%,90%)" />
 </template>
 
 <script>
-import { EventBus } from '../mixins/event-bus'
+import draggable from '../mixins/draggable'
 
 export default {
   name: 'vrect',
   props: ['value'],
-  methods: {
-    startDragging(event) {
-      EventBus.dragging = this
-      this.value.fill = "hsl(205,100%,80%)"
-      this.value.stroke = "hsl(205,100%,70%)"
-      EventBus.startX = event.offsetX
-      EventBus.startY = event.offsetY
-      EventBus.mouseOffsetX = event.offsetX - this.value.x
-      EventBus.mouseOffsetY = event.offsetY - this.value.y
-      // console.log(this.$parent.$children[2])
-      // console.log(this.$parent.$children[2].$forceUpdate())
-    }
-  }
+  mixins: [draggable]
 }
 </script>
 
