@@ -6,6 +6,7 @@ export default {
   },
   methods: {
     startDragging(event) {
+      event.stopPropagation()
       EventBus.dragging = this
       this.value.fill = "hsl(205,100%,80%)"
       this.value.stroke = "hsl(205,100%,70%)"

@@ -5,13 +5,13 @@
             :y1="0"
             :x2="position"
             :y2="$parent.height"
-            v-show="false"
+            v-show="true"
             v-for="position in edges['x']" />
       <line :x1="0"
             :y1="position"
             :x2="$parent.width"
             :y2="position"
-            v-show="false"
+            v-show="true"
             v-for="position in edges['y']" />
     </g>
 
@@ -56,12 +56,12 @@ export default {
         y: [ rectObj.y, rectObj.y+rectObj.height/2, rectObj.y+rectObj.height ]
       }
     },
-    // getEdgesOfText(textComp) {
-    //   return {
-    //     x: [ textComp.value.x, textComp.value.x+Math.round(textComp.width/2), textComp.value.x+Math.round(textComp.width) ],
-    //     y: [ textComp.value.y, textComp.value.y+Math.round(textComp.height/2), textComp.value.y+Math.round(textComp.height) ]
-    //   }
-    // },
+    getEdgesOfText(textComp) {
+      return {
+        x: [ textComp.value.x, textComp.value.x+Math.round(textComp.width/2), textComp.value.x+Math.round(textComp.width) ],
+        y: [ textComp.value.y+Math.round(textComp.ascentHeight), textComp.value.y ]
+      }
+    },
     getSvgEdges() {
       return {
         x: [ 0, this.$parent.width/2, parseInt(this.$parent.width) ],
@@ -78,8 +78,15 @@ export default {
         this.y = event.offsetY - this.bus.mouseOffsetY
 
         this.removeGuides()
-        this.snap('x')
-        this.snap('y')
+        
+        if (this.bus.dragging.$options.name == 'vtext') {
+          this.snapText('x')
+          this.snapText('y')  
+        } else {
+          this.snap('x')
+          this.snap('y')  
+        }
+        
         this.redraw()
       }
     },
@@ -105,6 +112,36 @@ export default {
         }
         else if(Math.abs(endDistance - position) <= _this.snapTreshhold){
           _this[axis] = position - rect[side];
+          setGuide = true
+        }
+
+        if (setGuide) {
+          _this.renderGuide(axis, position)
+        }
+      })
+    },
+    snapText(axis) {
+      var _this = this
+      var rect = this.bus.dragging.value
+      var side = axis === 'x' ? 'width' : 'height'
+      var distance = axis === 'x' ? this[axis] : this[axis]+this.bus.dragging.ascentHeight
+      var halfSideLength = Math.abs(this.bus.dragging[side]/2)
+      var center = distance + halfSideLength
+      var endDistance = axis === 'x' ? distance+this.bus.dragging[side] : this[axis]
+
+      this.edges[axis].forEach(function(position) {
+        var setGuide = false
+
+        if(Math.abs(distance - position) <= _this.snapTreshhold) {
+          _this[axis] = axis === 'x' ? position : position - _this.bus.dragging.ascentHeight;
+          setGuide = true
+        }
+        else if(Math.abs(center - position) <= _this.snapTreshhold && axis === 'x') {
+          _this[axis] = axis === 'x' ? position - halfSideLength : position + halfSideLength;
+          setGuide = true
+        }
+        else if(Math.abs(endDistance - position) <= _this.snapTreshhold) {
+          _this[axis] = axis === 'x' ? position - _this.bus.dragging[side] : position;
           setGuide = true
         }
 
@@ -141,16 +178,16 @@ export default {
       }
 
       elements.forEach(function(obj) {
-        // if (obj.name == 'vtext') {
-        //   var textComp = _this.$parent.$children.find((vueComp) => {
-        //     return vueComp.value == obj
-        //   })
-        //   svgEdges['x'].push(..._this.getEdgesOfText(textComp)['x'])
-        //   svgEdges['y'].push(..._this.getEdgesOfText(textComp)['y'])
-        // } else {
-        svgEdges['x'].push(..._this.getEdgesOfRect(obj)['x'])
-        svgEdges['y'].push(..._this.getEdgesOfRect(obj)['y'])
-        // }
+        if (obj.name == 'vtext') {
+          var textComp = _this.$parent.$children.find((vueComp) => {
+            return vueComp.value == obj
+          })
+          svgEdges['x'].push(..._this.getEdgesOfText(textComp)['x'])
+          svgEdges['y'].push(..._this.getEdgesOfText(textComp)['y'])
+        } else {
+          svgEdges['x'].push(..._this.getEdgesOfRect(obj)['x'])
+          svgEdges['y'].push(..._this.getEdgesOfRect(obj)['y'])
+        }
       })
 
       return svgEdges

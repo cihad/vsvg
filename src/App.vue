@@ -41,14 +41,12 @@ export default {
         //   width: 120,
         //   height: 120
         // },
-        // {
-        //   name: "vtext",
-        //   text: "Merhaba Dunya",
-        //   x: 300,
-        //   y: 300,
-        //   width: 100,
-        //   height: 30
-        // },
+        {
+          name: "vtext",
+          text: "Merhaba Dunya",
+          x: 300,
+          y: 300
+        },
 
       ]
     }

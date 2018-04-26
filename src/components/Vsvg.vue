@@ -1,7 +1,6 @@
 <template>
   <svg :width="width" :height="height">
     <slot></slot>
-    
 
     <aligment-guides v-model='value'></aligment-guides>
   </svg>

@@ -2,37 +2,46 @@
   <text :x="value.x"
         :y="value.y"
         v-on:mousedown="startDragging"
-        fill="red">
+        fill="red"
+        font-family="Arial"
+        :font-size="fontSize">
     {{ value.text }}
   </text>
 </template>
 
 <script>
 import { EventBus } from '../mixins/event-bus'
-
+import draggable from '../mixins/draggable'
+import FontMetrics from 'fontmetrics'
+  
 export default {
   name: 'vtext',
   props: ['value'],
   data() {
     return {
       width: null,
-      height: null
+      height: null,
+      fontMetrics: null,
+      fontSize: 32
     }
   },
-  methods: {
-    startDragging(event) {
-      EventBus.dragging = this
-      EventBus.startX = event.offsetX
-      EventBus.startY = event.offsetY
-      EventBus.mouseOffsetX = event.offsetX - this.value.x
-      EventBus.mouseOffsetY = event.offsetY - this.value.y
-      // console.log(this.$parent.$children[2])
-      // console.log(this.$parent.$children[2].$forceUpdate())
-    }
-  },
-  mounted() {
+  mixins: [draggable],
+  mounted() {    
     this.width = this.$el.getBBox().width
     this.height = this.$el.getBBox().height
+  },
+  beforeMount() {
+    var _this = this
+    
+    this.fontMetrics = new FontMetrics({
+      fontFamily: 'Arial',
+      fontSize: _this.fontSize
+    })
+  },
+  computed: {
+    ascentHeight() {
+      return this.fontMetrics.ascent * this.fontSize
+    }
   }
 }
 </script>
