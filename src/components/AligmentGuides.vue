@@ -5,13 +5,13 @@
             :y1="0"
             :x2="position"
             :y2="$parent.height"
-            v-show="true"
+            v-show="showEdge"
             v-for="position in edges['x']" />
       <line :x1="0"
             :y1="position"
             :x2="$parent.width"
             :y2="position"
-            v-show="true"
+            v-show="showEdge"
             v-for="position in edges['y']" />
     </g>
 
@@ -35,7 +35,15 @@ import { EventBus } from '../mixins/event-bus'
 
 export default {
   name: 'aligment-guides',
-  props: ['value'],
+  props: {
+    value: {
+      type: Array
+    },
+    showEdge: {
+      type: Boolean,
+      default: false
+    }
+  },
   data () {
     return {
       bus: EventBus,
@@ -68,23 +76,37 @@ export default {
         y: [ 0, this.$parent.height/2, parseInt(this.$parent.height) ]
       }
     },
+    offset(el) {
+      var rect = el.getBoundingClientRect();
+
+      return {
+        top: rect.top + document.body.scrollTop,
+        left: rect.left + document.body.scrollLeft
+      }
+    },
     stopDragging(event) {
       this.bus.stopDragging()
       this.removeGuides()
     },
     dragElement(event) {
       if (this.bus.dragging) {
-        this.x = event.offsetX - this.bus.mouseOffsetX
-        this.y = event.offsetY - this.bus.mouseOffsetY
+        if (this.bus.dragging.$options.name == 'vforeign') {
+          this.x = event.pageX - this.offset(this.$parent.$el).left - this.bus.mouseOffsetX
+          this.y = event.pageY - this.offset(this.$parent.$el).top - this.bus.mouseOffsetY
+          // debugger
+        } else {
+          this.x = event.offsetX - this.bus.mouseOffsetX
+          this.y = event.offsetY - this.bus.mouseOffsetY
+        }
 
         this.removeGuides()
-        
+
         if (this.bus.dragging.$options.name == 'vtext') {
           this.snapText('x')
-          this.snapText('y')  
+          this.snapText('y')
         } else {
           this.snap('x')
-          this.snap('y')  
+          this.snap('y')
         }
         
         this.redraw()

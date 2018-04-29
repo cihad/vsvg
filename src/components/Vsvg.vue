@@ -2,7 +2,7 @@
   <svg :width="width" :height="height">
     <slot></slot>
 
-    <aligment-guides v-model='value'></aligment-guides>
+    <aligment-guides :show-edge="showEdge" v-model='value'></aligment-guides>
   </svg>
 </template>
 
@@ -12,7 +12,7 @@ import { EventBus } from '../mixins/event-bus'
 
 export default {
   name: 'vsvg',
-  props: ['width', 'height', 'value'],
+  props: ['width', 'height', 'value', 'showEdge'],
   data () {
     return {
     }

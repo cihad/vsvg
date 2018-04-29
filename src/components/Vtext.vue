@@ -1,10 +1,12 @@
-<template>
+<template> 
   <text :x="value.x"
         :y="value.y"
         v-on:mousedown="startDragging"
+        v-on:dblclick="dblclick"
         fill="red"
         font-family="Arial"
-        :font-size="fontSize">
+        :font-size="fontSize"
+        style="cursor: default; user-select: none">
     {{ value.text }}
   </text>
 </template>
@@ -16,7 +18,15 @@ import FontMetrics from 'fontmetrics'
   
 export default {
   name: 'vtext',
-  props: ['value'],
+  props: {
+    value: {
+      type: Object
+    },
+    editable: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       width: null,
@@ -26,7 +36,7 @@ export default {
     }
   },
   mixins: [draggable],
-  mounted() {    
+  mounted() {
     this.width = this.$el.getBBox().width
     this.height = this.$el.getBBox().height
   },
@@ -41,6 +51,12 @@ export default {
   computed: {
     ascentHeight() {
       return this.fontMetrics.ascent * this.fontSize
+    }
+  },
+  methods: {
+    dblclick() {
+      console.log('dblcllliiicccck')
+      this.$emit('editable')
     }
   }
 }
