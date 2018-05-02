@@ -1,4 +1,4 @@
-<template> 
+<template>
   <foreignObject 
         :x="value.x"
         :y="value.y"
@@ -51,7 +51,25 @@ export default {
       EventBus.mouseOffsetX = event.offsetX
       EventBus.mouseOffsetY = event.offsetY
     }
-  }
+  },
+  // computed: {
+  //   transform() {
+  //     return "matrix(1,0,0,1," + this.value.x + "," + this.value.y + ")"
+  //   },
+  //   points() {
+  //     return [
+  //       [0, 0],
+  //       [this.value.width, 0],
+  //       [this.value.width, this.value.height],
+  //       [0, this.value.height],
+  //       [this.value.width/2, 0],
+  //       [this.value.width, this.value.height/2],
+  //       [this.value.width/2, this.value.height],
+  //       [0, this.value.height/2]
+  //     ]
+  //   }
+
+  // },
 }
 </script>
 

@@ -57,7 +57,7 @@ export default {
           text: "Merhaba Dunya",
           x: 10,
           y: 10,
-          width: 150,
+          width: 200,
           height: 30
         },
       ]
