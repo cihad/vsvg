@@ -1,4 +1,4 @@
-<template> 
+<template>
   <text :x="value.x"
         :y="value.y"
         v-on:mousedown="startDragging"

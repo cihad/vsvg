@@ -1,13 +1,13 @@
 <template>
   <div id="app" :contenteditable="editable">
+    <button v-on:click="showEdge = !showEdge">Toggle Edges</button>
+    <button v-on:click="addObj('vrect')">Add Rect</button>
+
     <vsvg width="1000" height="650" v-model="elements" :show-edge="showEdge">
       <template v-for="(element, i) in elements">
-        <component :is="element.name" v-model="elements[i]" v-on:editable="toggleEditable"></component>
+        <component :is="element.name" v-model="elements[i]" v-on:editable="toggleEditable" v-on:rb="rb"></component>
       </template>
     </vsvg>
-
-    <button v-on:click="showEdge = !showEdge">Toggle Edges</button>
-    
   </div>
 </template>
 
@@ -69,6 +69,18 @@ export default {
   methods: {
     toggleEditable() {
       this.editable = !this.editable
+    },
+    rb(e) {
+      console.log(e)
+    },
+    addObj(name) {
+      this.elements.push({
+        name: "vrect",
+        x: Math.random() * 300 + 50,
+        y: Math.random() * 300 + 50,
+        width: Math.random() * 300 + 50,
+        height: Math.random() * 300 + 50
+      })
     }
   }
 }
