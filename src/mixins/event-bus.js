@@ -3,7 +3,8 @@ import Vue from 'vue';
 export const EventBus = new Vue({
   data() {
     return {
-      dragging: null
+      dragging: null,
+      selected: null
     }
   },
   methods: {

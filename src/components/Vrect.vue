@@ -1,8 +1,8 @@
 <template>
-  <g @mousedown="isOver = false; isSelected = true"
+  <g @mousedown="select"
     @mouseover="isOver = true"
     @mouseout="isOver = false"
-    v-click-outside="close">
+    v-click-outside="unselect">
     <rect :x="value.x"
           :y="value.y"
           :width="value.width"
@@ -23,6 +23,7 @@
 </template>
 
 <script>
+import { EventBus } from '../mixins/event-bus'
 import ClickOutside from 'vue-click-outside'
 import draggable from '../mixins/draggable'
 import SelectPoint from '../components/SelectPoint'
@@ -73,16 +74,40 @@ export default {
 
   },
   methods: {
+    select() {
+      this.isOver = false
+      this.isSelected = true
+      EventBus.selected = this
+    },
     onPointMouseDown(pointName, event) {
       console.log('......',pointName)
       var x = event.pageX
       var y = event.pageY
       this.$emit(pointName, {x: x, y: y, event: event})
     },
-    close() {
+    unselect() {
       console.log('OUTSIDEEEEE')
       this.isSelected = false
       this.isOver = false
+      EventBus.selected = null
+    },
+    move(pos) {
+      console.log('........ moving', pos)
+      switch(pos) {
+        case "left":
+          console.log(this.value.x--)
+          this.value.x--
+          break;
+        case "top":
+          this.value.y--
+          break;
+        case "right":
+          this.value.x++
+          break;
+        case "bottom":
+          this.value.y++
+          break;
+      }
     }
   }
 

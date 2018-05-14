@@ -1,17 +1,22 @@
 <template>
-  <div id="app" :contenteditable="editable">
+  <div id="app" v-on:keyup.left="move('left')"
+      v-on:keyup.up="move('top')"
+      v-on:keyup.right="move('right')"
+      v-on:keyup.down="move('bottom')"
+      tabindex="0">
     <button v-on:click="showEdge = !showEdge">Toggle Edges</button>
-    <button v-on:click="addObj('vrect')">Add Rect</button>
+    <button v-on:click="addObj('vrect')">Add Rect</button><br>
 
     <vsvg width="1000" height="650" v-model="elements" :show-edge="showEdge">
       <template v-for="(element, i) in elements">
-        <component :is="element.name" v-model="elements[i]" v-on:editable="toggleEditable" v-on:rb="rb"></component>
+        <component :is="element.name" v-model="elements[i]"></component>
       </template>
     </vsvg>
   </div>
 </template>
 
 <script>
+import { EventBus } from './mixins/event-bus'
 import Vsvg from "./components/Vsvg"
 import Vrect from "./components/Vrect"
 import Vtext from "./components/Vtext"
@@ -22,7 +27,6 @@ export default {
   name: 'app',
   data () {
     return {
-      editable: false,
       showEdge: false,
       elements: [
         // {
@@ -67,12 +71,6 @@ export default {
     Vsvg, Vrect, Vtext, Vbrowser, Vforeign
   },
   methods: {
-    toggleEditable() {
-      this.editable = !this.editable
-    },
-    rb(e) {
-      console.log(e)
-    },
     addObj(name) {
       this.elements.push({
         name: "vrect",
@@ -81,6 +79,12 @@ export default {
         width: Math.random() * 300 + 50,
         height: Math.random() * 300 + 50
       })
+    },
+    move(pos) {
+      console.log('...... moving app')
+      if (EventBus.selected) {
+        EventBus.selected.move(pos)
+      }
     }
   }
 }
