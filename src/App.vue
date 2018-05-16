@@ -1,8 +1,9 @@
 <template>
-  <div id="app" v-on:keyup.left="move('left')"
-      v-on:keyup.up="move('top')"
-      v-on:keyup.right="move('right')"
-      v-on:keyup.down="move('bottom')"
+  <div id="app"
+      v-on:keydown.left="move('left')"
+      v-on:keydown.up="move('top')"
+      v-on:keydown.right="move('right')"
+      v-on:keydown.down="move('bottom')"
       tabindex="0">
     <button v-on:click="showEdge = !showEdge">Toggle Edges</button>
     <button v-on:click="addObj('vrect')">Add Rect</button><br>
@@ -81,7 +82,6 @@ export default {
       })
     },
     move(pos) {
-      console.log('...... moving app')
       if (EventBus.selected) {
         EventBus.selected.move(pos)
       }
